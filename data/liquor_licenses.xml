@@ -1,0 +1,218 @@
+﻿<metadata>
+  <idinfo>
+    <citation>
+      <citeinfo>
+        <origin>City and County of Denver, Excise and License</origin>
+        <title>Liquor Licenses</title>
+        <geoform>vector digital data</geoform>
+        <othercit>This dataset is updated daily.</othercit>
+      </citeinfo>
+    </citation>
+    <descript>
+      <abstract>This point layer represents every address where at least one liquor license has been issued in the City and County of Denver.</abstract>
+      <purpose>To represent the addresses where at least one liquor licenses has been issued.</purpose>
+      <supplinf>Extracted from Excise and Licenses Liquor License database.</supplinf>
+    </descript>
+    <status>
+      <progress>In work</progress>
+      <update>Daily</update>
+    </status>
+    <spdom>
+      <bounding>
+        <westbc>-105.110037</westbc>
+        <eastbc>-104.599352</eastbc>
+        <northbc>39.916326</northbc>
+        <southbc>39.611579</southbc>
+      </bounding>
+    </spdom>
+    <keywords>
+      <theme>
+        <themekt>None</themekt>
+        <themekey>licensing</themekey>
+      </theme>
+      <theme>
+        <themekt>ISO 19115 Topic Categories</themekt>
+        <themekey>location</themekey>
+        <themekey>society</themekey>
+      </theme>
+      <place>
+        <placekt>None</placekt>
+        <placekey>Denver</placekey>
+        <placekey>Denver County</placekey>
+        <placekey>Colorado</placekey>
+        <placekey>USA</placekey>
+      </place>
+    </keywords>
+    <accconst>None</accconst>
+    <useconst>ACCESS CONSTRAINTS:
+
+This data set is provided as read-only. Contact the GIS Data Administrator for more information on distribution requirements/restrictions.   
+
+USE CONSTRAINTS:
+
+The City and County of Denver is not responsible and shall not be liable to the user for damages of any kind arising out of the use of data or information provided by the City and County of Denver, including the installation of the data or information, its use, or the results obtained from its use.
+ 
+ANY DATA OR INFORMATION PROVIDED BY THE City and County of Denver IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  Data or information provided by the City and County of Denver shall be used and relied upon only at the user's sole risk, and the user agrees to indemnify and hold harmless the City and County of Denver, its officials, officers and employees from any liability arising out of the use of the data/information provided.
+ 
+NOT FOR ENGINEERING PURPOSES
+</useconst>
+    <datacred>City and County of Denver, Excise and License; City and County of Denver, Technology Services / DenverGIS
+</datacred>
+    <secinfo>
+      <secsys>AVAILABLE</secsys>
+      <secclass>Unclassified</secclass>
+      <sechandl>Available to the general public and posted on the Denver FTP (File Transfer Protocol) site.</sechandl>
+    </secinfo>
+    <native>Microsoft Windows Server 2003 R2 Version 5.2 (Build 3790) Service Pack 2; ESRI ArcGIS 10.0.5.4400</native>
+  </idinfo>
+  <dataqual />
+  <spdoinfo>
+    <direct>Vector</direct>
+    <ptvctinf>
+      <sdtsterm>
+        <sdtstype>Entity point</sdtstype>
+        <ptvctcnt>1996</ptvctcnt>
+      </sdtsterm>
+    </ptvctinf>
+  </spdoinfo>
+  <spref>
+    <horizsys>
+      <geograph>
+        <latres>8.9831528411952133e-009</latres>
+        <longres>8.9831528411952133e-009</longres>
+        <geogunit>Decimal Degrees</geogunit>
+      </geograph>
+      <geodetic>
+        <horizdn>D WGS 1984</horizdn>
+        <ellips>WGS 1984</ellips>
+        <semiaxis>6378137.0</semiaxis>
+        <denflat>298.257223563</denflat>
+      </geodetic>
+    </horizsys>
+  </spref>
+  <eainfo>
+    <detailed>
+      <enttyp>
+        <enttypl>liquor_licenses</enttypl>
+      </enttyp>
+      <attr>
+        <attrlabl>OBJECTID</attrlabl>
+        <attrdef>Internal feature number.</attrdef>
+        <attrdefs>ESRI</attrdefs>
+        <attrdomv>
+          <udom>Sequential unique whole numbers that are automatically generated.</udom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>BFN</attrlabl>
+        <attrdef>Business File Number for EXLIC department use only.</attrdef>
+        <attrdefs>Excise and Licenses Liquor License database.</attrdefs>
+      </attr>
+      <attr>
+        <attrlabl>bus_prof_name</attrlabl>
+        <attrdef>Business name.</attrdef>
+        <attrdefs>Excise and Licenses Liquor License database.</attrdefs>
+      </attr>
+      <attr>
+        <attrlabl>LIC_ID</attrlabl>
+        <attrdef>License Identification Number</attrdef>
+        <attrdefs>Excise and Licenses Liquor License database.</attrdefs>
+      </attr>
+      <attr>
+        <attrlabl>CODE</attrlabl>
+        <attrdef>License Code</attrdef>
+        <attrdefs>Excise and Licenses Liquor License database.</attrdefs>
+      </attr>
+      <attr>
+        <attrlabl>CATEGORY</attrlabl>
+        <attrdef>License Category</attrdef>
+        <attrdefs>Excise and Licenses Liquor License database.</attrdefs>
+      </attr>
+      <attr>
+        <attrlabl>description</attrlabl>
+        <attrdef>Liquor license description</attrdef>
+        <attrdefs>Excise and Licenses Liquor License database.</attrdefs>
+      </attr>
+      <attr>
+        <attrlabl>LIC_NAME</attrlabl>
+        <attrdef>License Name</attrdef>
+        <attrdefs>Excise and Licenses Liquor License database.</attrdefs>
+      </attr>
+      <attr>
+        <attrlabl>IDATE</attrlabl>
+        <attrdef>Issue Date</attrdef>
+        <attrdefs>Excise and Licenses Liquor License database.</attrdefs>
+      </attr>
+      <attr>
+        <attrlabl>EDATE</attrlabl>
+        <attrdef>Expiration Date </attrdef>
+        <attrdefs>Excise and Licenses Liquor License database.</attrdefs>
+      </attr>
+      <attr>
+        <attrlabl>full_address</attrlabl>
+        <attrdef>Street address for business holding liquor license.</attrdef>
+        <attrdefs>Excise and Licenses Liquor License database.</attrdefs>
+      </attr>
+      <attr>
+        <attrlabl>LIC_STATUS</attrlabl>
+        <attrdef>License Status</attrdef>
+        <attrdefs>Excise and Licenses Liquor License database.</attrdefs>
+      </attr>
+      <attr>
+        <attrlabl>POLICEDIST</attrlabl>
+        <attrdef>Police District</attrdef>
+        <attrdefs>DPD</attrdefs>
+      </attr>
+      <attr>
+        <attrlabl>CENSUS</attrlabl>
+        <attrdef>Census Tract</attrdef>
+        <attrdefs>DenverGIS</attrdefs>
+      </attr>
+      <attr>
+        <attrlabl>shape</attrlabl>
+        <attrdef>Feature geometry.</attrdef>
+        <attrdefs>ESRI</attrdefs>
+        <attrdomv>
+          <udom>Coordinates defining the features.</udom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>COUNCIL</attrlabl>
+        <attrdef>City Council District</attrdef>
+        <attrdefs>CPD</attrdefs>
+      </attr>
+    </detailed>
+  </eainfo>
+  <distinfo>
+    <distrib>
+      <cntinfo>
+        <cntorgp>
+          <cntorg>City and County of Denver, Technology Services / GIS Data</cntorg>
+        </cntorgp>
+        <cntaddr>
+          <addrtype>unknown</addrtype>
+          <address>201 W Colfax Ave, Dept 301</address>
+          <city>Denver </city>
+          <state>CO</state>
+          <postal>80202</postal>
+          <country>USA</country>
+        </cntaddr>
+        <cntfax>720-913-5237</cntfax>
+        <cntemail>denvergis@denvergov.org</cntemail>
+        <hours>M-F 8:00am - 4:30pm (MT)</hours>
+      </cntinfo>
+    </distrib>
+    <distliab>See access and use constraints information.</distliab>
+    <stdorder>
+      <fees>This information is available at a time and material cost from the City and County of Denver. </fees>
+      <ordering>Digital products can be downloaded for free using the FTP site or can be requested by filing out the GIS Data Request Form and faxing it to (720) 913-5237, ATTN: Data Sales.  All digital orders will be confirmed and processed by DenverGIS.</ordering>
+      <turnarnd>10 working days.</turnarnd>
+    </stdorder>
+  </distinfo>
+  <metainfo>
+    <metd>20120808</metd>
+    <metstdn>FGDC Content Standard for Digital Geospatial Metadata</metstdn>
+    <metstdv>FGDC-STD-001-1998</metstdv>
+    <mettc>local time</mettc>
+  </metainfo>
+</metadata>

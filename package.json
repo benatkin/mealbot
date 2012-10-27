@@ -10,6 +10,9 @@
   "dependencies": {
     "express": "3.0.0",
     "jade": "*",
-    "superagent": "~0.9.7"
+    "async": "0.1.22",
+    "superagent": "~0.9.7",
+    "yelp" : "0.1.1",
+    "sax" : "0.4.2"
   }
 }

@@ -1,7 +1,13 @@
 var express = require('express')
   , path = require('path')
   , request = require('superagent')
-  , assert = require('assert');
+  , assert = require('assert')
+  , async = require('async')
+  , yelp = require('yelp')
+  , sax = require('sax');
+
+var strict = true, 
+    parser = sax.parser(strict);
 
 var app = express();
 
@@ -77,6 +83,108 @@ app.get('/', function(req, res) {
 app.get('/map', function(req, res) {
   console.error('render map');
   res.render('map', {"title":"MapQuest sample"});
+  var places = getPlaces("Denver, Colorado", "chinese", function(err, locations) {
+    var location = locations[0];
+    
+  }); // getPlaces
+  //console.error(places.city.toString());
 });
 
+// function that gets an address, returns list of places based on apis
+function getPlaces(location, food, callback) {
+
+  var debug = false;
+  console.error("get places");
+  var locations = locationEnrichment(location, function(err, geolocations) {
+    console.log('list locations');
+    if (debug) {
+      var len = geolocations.length;
+      for(var i = 0; i<len; i++) {
+        console.error("location ",i," is ",geolocations[i].address," in ",geolocations[i].state.code)
+      }
+    }
+
+    getYelpPlaces(geolocations[0].city, geolocations[0].state.name, food, function(err, places) {
+      console.error('yelp data is in places: ',places);
+    });  
+
+    callback(null, geolocations);
+  
+  });
+}
+
+function locationEnrichment(location, callback) {
+  // enrich location data using full contact api
+  var fcKey = "scrubbed";
+  var address = '', city = '', state = '';
+  var locations = [];
+  request
+    .get('https://api.fullcontact.com/v2/address/locationEnrichment.json')
+    .query({'place': encodeURI(location)})
+    .query({'apiKey': fcKey})
+    .set('Accept', 'application/json')
+    .end(function(rres) {
+      assert.equal(rres.statusCode, 200);
+      console.error("Found ",rres.body.locations.length," locations");
+      //console.error('done');
+      locations = rres.body.locations;
+      callback(null, locations);
+    });
+
+  console.error('request is async');
+
+}
+
+function getYelpPlaces(city, state, typeOfFood, callback) {
+  var yelpapi  = yelp.createClient({
+    consumer_key: "akqqN2r0exZiFtHjavVxpA", 
+    consumer_secret: "scrubbed",
+    token: "AC9JsQ3rcVxeVyX8LJjwaVVYJrsoSjuE",
+    token_secret: "scrubbed"
+  });
+
+  // See http://www.yelp.com/developers/documentation/v2/search_api
+  yelpapi.search({term: typeOfFood + " food", location: city + ", " + state}, function(error, data) {
+    console.log('yelp errors: ',
+      error);
+    //console.log(data);
+    callback(null, data);
+  });
+}
+
+function getLiquorJoints() {
+  parser.onerror = function (e) {
+    // an error happened.
+  };
+  parser.ontext = function (t) {
+    // got some text.  t is the string of text.
+    console.error('text ',t);
+  };
+  parser.onopentag = function (node) {
+    // opened a tag.  node has "name" and "attributes"
+    console.error('node ', node.name)
+  };
+  parser.onattribute = function (attr) {
+    // an attribute.  attr has "name" and "value"
+  };
+  parser.onend = function () {
+    // parser stream is done, and ready to have more stuff written to it.
+    console.error('write more xml please')
+  };
+
+  parser.write('<xml>Hello, <who name="world">world</who>!</xml>').close();
+
+}
+
+function getMapQuestPlaces() {
+  
+}
+
+function getYellowPagesPlaces() {
+
+}
+
+function getIngredients() {
+
+}
 module.exports = app;
