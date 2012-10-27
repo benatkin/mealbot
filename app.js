@@ -43,12 +43,14 @@ function getRecipients(message) {
   function addRecipients(field) {
     var addresses = mimelib.parseAddresses(field);
     addresses.forEach(function(address) {
+      if (/mealbot\.json\.bz/i.test(address.address)) return;
       emails.push(address.address);
       names.push(address.name || address.address);
     });
   }
 
   var emails = [], names = [];
+  if (message.from) addRecipients(message.from);
   if (message.to) addRecipients(message.to);
   if (message.cc) addRecipients(message.cc);
   var result = {emails: emails, names: names};
