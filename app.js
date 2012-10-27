@@ -20,17 +20,23 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-app.post('/email', function(req, res) {
+function log(message, callback) {
   var couchUrl = process.env.COUCH_URL;
   assert.ok(couchUrl);
   request
     .post(couchUrl)
-    .send(req.body)
+    .send(message)
     .set('Accept', 'application/json')
     .end(function(rres) {
       assert.equal(rres.statusCode, 201);
-      res.send(200);
+      callback(null);
     });
+}
+
+app.post('/email', function(req, res) {
+  log(req.body, function(err) {
+    res.send(200);
+  });
 });
 
 module.exports = app;
