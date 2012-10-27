@@ -65,7 +65,7 @@ function getRecipients(message) {
 }
 
 function getParams(text) {
-  var match = /^(.*) in (.*)/.exec(text);
+  var match = /^(.*) in (.*)$/.exec(text);
   if (match) {
     return {
       location: 'Denver',
