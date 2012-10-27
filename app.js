@@ -49,7 +49,7 @@ function findEmails(emails, field) {
 function recipients(message) {
   var envelope = typeof message.envelope == 'string'
                  ? JSON.parse(message.envelope)
-                 : message.envelope;
+                 : message.envelope
     , emails = Array.isArray(envelope.from)
                ? envelope.from.slice()
                : [envelope.from];
