@@ -1,5 +1,7 @@
 var express = require('express')
-  , path = require('path');
+  , path = require('path')
+  , request = require('superagent')
+  , assert = require('assert');
 
 var app = express();
 
@@ -19,9 +21,16 @@ app.configure('development', function(){
 });
 
 app.post('/email', function(req, res) {
-  console.error('email request');
-  console.error(req.body);
-  res.send(200);
+  var couchUrl = process.env.COUCH_URL;
+  assert.ok(couchUrl);
+  request
+    .post(couchUrl)
+    .send(req.body)
+    .set('Accept', 'application/json')
+    .end(function(rres) {
+      assert.equal(rres.statusCode, 201);
+      res.send(200);
+    });
 });
 
 module.exports = app;
