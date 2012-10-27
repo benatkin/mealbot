@@ -6,9 +6,6 @@ var express = require('express')
   , sax = require('sax')
   , mimelib = require('mimelib-noiconv');
 
-var strict = true, 
-    parser = sax.parser(strict);
-
 var app = express();
 
 app.configure(function(){
@@ -93,9 +90,9 @@ app.get('/', function(req, res) {
 
 app.get('/map', function(req, res) {
   console.error('render map');
-  res.render('map', {"title":"MapQuest sample"});
   var places = getPlaces("Denver, Colorado", "chinese", function(err, locations) {
     var location = locations[0];
+    res.render('map', {"title":"Mealbot Suggestions", places: locations.businesses});
     
   }); // getPlaces
   //console.error(places.city.toString());
@@ -117,9 +114,10 @@ function getPlaces(location, food, callback) {
 
     getYelpPlaces(geolocations[0].city, geolocations[0].state.name, food, function(err, places) {
       console.error('yelp data is in places: ',places);
+      callback(null, places);
     });  
 
-    callback(null, geolocations);
+    //callback(null, geolocations);
   
   });
 }
@@ -157,44 +155,13 @@ function getYelpPlaces(city, state, typeOfFood, callback) {
       console.log('got an error from yelp', err);
       return callback(err);
     }
-    //console.log(data);
+
     callback(null, data);
   });
-}
-
-function getLiquorJoints() {
-  parser.onerror = function (e) {
-    // an error happened.
-  };
-  parser.ontext = function (t) {
-    // got some text.  t is the string of text.
-    console.error('text ',t);
-  };
-  parser.onopentag = function (node) {
-    // opened a tag.  node has "name" and "attributes"
-    console.error('node ', node.name)
-  };
-  parser.onattribute = function (attr) {
-    // an attribute.  attr has "name" and "value"
-  };
-  parser.onend = function () {
-    // parser stream is done, and ready to have more stuff written to it.
-    console.error('write more xml please')
-  };
-
-  parser.write('<xml>Hello, <who name="world">world</who>!</xml>').close();
-
 }
 
 function getMapQuestPlaces() {
   
 }
 
-function getYellowPagesPlaces() {
-
-}
-
-function getIngredients() {
-
-}
 module.exports = app;
