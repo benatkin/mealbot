@@ -1,7 +1,6 @@
 var express = require('express')
   , path = require('path')
   , request = require('superagent')
-  , assert = require('assert')
   , yelp = require('yelp')
   , sax = require('sax')
   , mimelib = require('mimelib-noiconv');
@@ -22,7 +21,9 @@ app.configure(function(){
 
 function getenv(name) {
   var val = process.env[name.toUpperCase()];
-  assert.ok(val);
+  if (!val) {
+    console.error('missing environment variable ' + JSON.stringify(name) + ': ', val);
+  }
   return val;
 }
 
@@ -30,10 +31,15 @@ function log(message, callback) {
   request
     .post(getenv('couch_url'))
     .type('json')
-    .send(message)
+    .send({
+      message: message,
+      date: new Date()
+    })
     .set('Accept', 'application/json')
     .end(function(rres) {
-      assert.equal(rres.statusCode, 201);
+      if (rres.statusCode != 201) {
+        console.error('logging to CouchDB failed');
+      }
       callback(null);
     });
 }
@@ -73,14 +79,18 @@ function reply(message, callback) {
       from: 'noms@mealbot.json.bz'
     })
     .end(function(res) {
-      assert.equal(res.status, 200);
+      if (res.status != 200) {
+        console.error('sendgrid error code ' + res.status + ': ', res.body);
+        callback(new Error('error sending email'));
+      }
       callback(null);
     });
 }
 
-app.post('/email', function(req, res) {
+app.post('/email', function(req, res, next) {
   log(req.body, function() {});
   reply(req.body, function(err) {
+    if (err) return next(err);
     res.send(200);
   });
 });
@@ -95,7 +105,6 @@ app.get('/map', function(req, res) {
   var places = getPlaces("Denver, Colorado", "chinese", function(err, locations) {
     var location = locations[0];
     res.render('map', {"title":"Mealbot Suggestions", places: locations.businesses});
-    
   }); // getPlaces
   //console.error(places.city.toString());
 });
