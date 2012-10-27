@@ -44,7 +44,7 @@ function recipients(message) {
   var fields = [];
   if (message.to) fields.push(message.to);
   if (message.cc) fields.push(message.cc);
-  var people = fields.join(",").trim().split(/\s*,\s*/);
+  var emails = fields.join(",").trim().split(/\s*,\s*/);
   console.error('emails', emails);
   return emails;
 }
