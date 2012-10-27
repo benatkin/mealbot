@@ -1,7 +1,16 @@
 extends layout
 
+block append head
+ link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Monofett')
+ link(rel='stylesheet', href=http://fonts.googleapis.com/css?family=Inder')
+
 block content
-  h1 Welcome to mealbot!
-  p To try this out, send an email to a friend and cc noms@mealbot.json.bz
-  p Be sure to include the friend in the to: field.
-  p You and your friend will each receive one email with suggestion(s).
+  #content
+   div.center
+    h1 Welcome to mealbot!
+    
+  div.center
+   p.body To try this out, send an email to a friend and
+   p.body <strong>cc:</strong> <address><a href="mailto:noms@mealbot.json.bz">noms@mealbot.json.bz</a></address>
+   p.body Be sure to include the friend in the <strong>to:</strong> field.
+   p.body You and your friend will each receive one email with suggestion(s).

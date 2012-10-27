@@ -1,5 +1,5 @@
 body {
-  padding: 50px;
+  padding: 10px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
@@ -7,7 +7,33 @@ a {
   color: #00B7FF;
 }
 
+div.center {
+  width: 760px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+h1 {
+	font-family: 'Monofett', cursive;
+	font-size: 7em;
+}
+
+p.body {
+	font-family: 'Inder', sans-serif;
+	font-size: 2em;
+}
+
+address {
+	font-family: 'Inder', sans-serif;
+	font-size:2.5em;
+}
+
 #map {
 	width:800px; 
 	height:600px;
+}
+
+#content {
+	background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAcAAAAHCAYAAADEUlfTAAAAG0lEQVQIW2OMq7zlw4ADMIIkF7WrbcEmP+gkAarWGgXyq5CNAAAAAElFTkSuQmCC);
 }
