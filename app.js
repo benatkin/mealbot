@@ -54,7 +54,7 @@ function recipients(message) {
                ? envelope.from.slice()
                : [envelope.from];
   findEmails(emails, envelope.to);
-  findEmails(emails, envelope.from);
+  findEmails(emails, envelope.cc);
   return emails;
 }
 
