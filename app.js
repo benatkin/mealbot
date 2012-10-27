@@ -64,7 +64,7 @@ function getRecipients(message) {
   return result;
 }
 
-function reply(message, callback) {
+function reply(message, html, callback) {
   var recipients = getRecipients(message);
   request
     .post('https://sendgrid.com/api/mail.send.json')
@@ -75,7 +75,7 @@ function reply(message, callback) {
       to: recipients.emails,
       toname: recipients.names,
       subject: 'Re: ' + message.subject,
-      html: '<h1 style="color: red">Coming Soon! For now just go to Chipotle.</h1>',
+      html: html,
       from: 'noms@mealbot.json.bz'
     })
     .end(function(res) {
@@ -89,9 +89,11 @@ function reply(message, callback) {
 
 app.post('/email', function(req, res, next) {
   log(req.body, function() {});
-  reply(req.body, function(err) {
-    if (err) return next(err);
-    res.send(200);
+  res.render('email', {}, function(err, html) {
+    reply(req.body, html, function(err) {
+      if (err) return next(err);
+      res.send(200);
+    });
   });
 });
 
