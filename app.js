@@ -18,4 +18,10 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
+app.post('/email', function(req, res) {
+  console.error('email request');
+  console.error(req.body);
+  res.send(200);
+});
+
 module.exports = app;
