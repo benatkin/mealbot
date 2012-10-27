@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "express": "3.0.0",
-    "jade": "*"
+    "jade": "*",
+    "async": "0.1.22"
   }
 }
