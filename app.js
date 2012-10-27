@@ -64,8 +64,8 @@ function reply(message, callback) {
     .send({
       api_user: getenv('sendgrid_api_user'),
       api_key: getenv('sendgrid_api_key'),
-      to: recipients.to,
-      toname: recipients.toname,
+      to: recipients.emails,
+      toname: recipients.names,
       subject: 'Re: ' + message.subject,
       html: '<h1 style="color: red">Coming Soon! For now just go to Chipotle.</h1>',
       from: 'noms@mealbot.json.bz'
