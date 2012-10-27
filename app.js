@@ -14,10 +14,7 @@ app.configure(function(){
   app.use(express.methodOverride());
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
-});
-
-app.configure('development', function(){
-  app.use(express.errorHandler());
+  app.use(express.errorHandler({dumpExceptions: true}));
 });
 
 function getenv(name) {
