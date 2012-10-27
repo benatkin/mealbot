@@ -38,7 +38,7 @@ function log(message, callback) {
 function findEmails(emails, field) {
   if (Array.isArray(field)) {
     for (var i=0; i < field.length; i++) {
-      var email = envelope.to[i];
+      var email = field[i];
       if (email.toLowerCase().indexOf('mealbot.json.bz') == -1) {
         emails.push(email);
       }
