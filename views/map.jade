@@ -3,8 +3,22 @@ extends layout
 block scripts
   script(src='http://www.mapquestapi.com/sdk/js/v7.0.s/mqa.toolkit.js?key=Fmjtd%7Cluuanu0tnq%2Crn%3Do5-96bshw')
   script(src='javascript/mapcontrol.js')
+  script(type='text/javascript')
+
+        function fillPlaces(){
+            var placesArray = #{places};
+            alert("inside fillranking");
+            var divElement = document.getElementById("places");
+            for(var i = 0; i< placesArray.length; i++){
+                divElements.innerHTML += "" + i+1 + ". " + placesArray[i].name + " " + rankArray[i].rating + " stars";
+            }
+        }
+
+        fillPlaces();
 
 block append content
   h1= title
-  p Welcome to #{title}
+  p Welcome to Mealbot. Browse around and decide on a place after reviewing our suggestions.
   #map
+  #places
+  

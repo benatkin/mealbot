@@ -16,4 +16,38 @@
 
       /*Construct an instance of MQA.TileMap with the options object*/ 
       window.map = new MQA.TileMap(options);
+
+      MQA.withModule('largezoom','traffictoggle','viewoptions','geolocationcontrol','insetmapcontrol','mousewheel', function() {
+  
+        map.addControl(
+          new MQA.LargeZoom(),
+          new MQA.MapCornerPlacement(MQA.MapCorner.TOP_LEFT, new MQA.Size(5,5))
+        );
+
+        map.addControl(new MQA.TrafficToggle());
+
+        map.addControl(new MQA.ViewOptions());
+
+        map.addControl(
+          new MQA.GeolocationControl(),
+          new MQA.MapCornerPlacement(MQA.MapCorner.TOP_RIGHT, new MQA.Size(10,50))
+        );
+
+        /*Inset Map Control options*/ 
+        var options={
+          size:{width:150, height:125},
+          zoom:3,
+          mapType:'map',
+          minimized:true };
+
+        map.addControl(
+          new MQA.InsetMapControl(options),
+          new MQA.MapCornerPlacement(MQA.MapCorner.BOTTOM_RIGHT)
+        );
+
+        map.enableMouseWheelZoom();
+      });
+      
     });
+
+
