@@ -36,16 +36,26 @@ function log(message, callback) {
     });
 }
 
-function recipients(message) {
-  var emails = message.envelope.from;
-  if (Array.isArray(message.envelope.to)) {
-    for (var i=0; i < message.envelope.to.length; i++) {
-      var email = message.envelope.to[i];
+function findEmails(emails, field) {
+  if (Array.isArray(field)) {
+    for (var i=0; i < field.length; i++) {
+      var email = envelope.to[i];
       if (email.toLowerCase().indexOf('mealbot.json.bz') == -1) {
         emails.push(email);
       }
     }
   }
+}
+
+function recipients(message) {
+  var envelope = typeof message.envelope == 'string'
+                 ? JSON.parse(message.envelope)
+                 : message.envelope
+    , emails = Array.isArray(envelope.from)
+               ? envelope.from.slice()
+               : [envelope.from];
+  findEmails(emails, envelope.to);
+  findEmails(emails, envelope.from);
   return emails;
 }
 
