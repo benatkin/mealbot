@@ -3,7 +3,11 @@ var express = require('express')
   , request = require('superagent')
   , assert = require('assert')
   , async = require('async')
-  , yelp = require('yelp');
+  , yelp = require('yelp')
+  , sax = require('sax');
+
+var strict = true, 
+    parser = sax.parser(strict);
 
 var app = express();
 
@@ -115,7 +119,7 @@ function getPlaces(location, food, callback) {
     }
 
     getYelpPlaces(geolocations[0].city, geolocations[0].state.name, food, function(err, places) {
-      
+      console.error('yelp data is in places: ',places);
     });  
 
     callback(null, geolocations);
@@ -155,10 +159,34 @@ function getYelpPlaces(city, state, typeOfFood, callback) {
 
   // See http://www.yelp.com/developers/documentation/v2/search_api
   yelpapi.search({term: typeOfFood + " food", location: city + ", " + state}, function(error, data) {
-    console.log(error);
-    console.log(data);
+    console.log('yelp errors: ',
+      error);
+    //console.log(data);
+    callback(null, data);
   });
-  
+}
+
+function getLiquorJoints() {
+  parser.onerror = function (e) {
+    // an error happened.
+  };
+  parser.ontext = function (t) {
+    // got some text.  t is the string of text.
+    console.error('text ',t);
+  };
+  parser.onopentag = function (node) {
+    // opened a tag.  node has "name" and "attributes"
+    console.error('node ', node.name)
+  };
+  parser.onattribute = function (attr) {
+    // an attribute.  attr has "name" and "value"
+  };
+  parser.onend = function () {
+    // parser stream is done, and ready to have more stuff written to it.
+    console.error('write more xml please')
+  };
+
+  parser.write('<xml>Hello, <who name="world">world</who>!</xml>').close();
 
 }
 
