@@ -64,8 +64,36 @@ function getRecipients(message) {
   return result;
 }
 
-function reply(message, html, callback) {
-  var recipients = getRecipients(message);
+function getParams(text) {
+  var match = /^(.*) in (.*)/.exec(text);
+  if (match) {
+    return {
+      location: 'Denver',
+      food: 'Pizza'
+    };
+  } else {
+    return {
+      location: 'Denver',
+      food: 'Pizza',
+      default: true
+    };
+  }
+}
+
+function getNoms(params, callback) {
+  getPlaces(params.location, params.food, function(err, locations) {
+    if (err) {
+      callback(err);
+      if (Array.isArray(locations.businesses) && locations.businesses.length > 0) {
+        callback(null, locations.businesses);
+      } else {
+        callback(null, null);
+      }
+    }
+  });
+}
+
+function reply(message, recipients, html, callback) {
   request
     .post('https://sendgrid.com/api/mail.send.json')
     .type('form')
@@ -89,10 +117,17 @@ function reply(message, html, callback) {
 
 app.post('/email', function(req, res, next) {
   log(req.body, function() {});
-  res.render('email', {}, function(err, html) {
-    reply(req.body, html, function(err) {
-      if (err) return next(err);
-      res.send(200);
+
+  var recipients = getRecipients(message)
+    , params = getParams(message.text);
+
+  getNoms(params, function(err, noms) {
+    if (err) return next(err);
+    res.render('email', {noms: noms, default: params.default}, function(err, html) {
+      reply(req.body, recipients, html, function(err) {
+        if (err) return next(err);
+        res.send(200);
+      });
     });
   });
 });
