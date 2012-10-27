@@ -24,4 +24,14 @@ app.post('/email', function(req, res) {
   res.send(200);
 });
 
+app.get('/', function(req, res) {
+  console.error('index loaded');
+  res.render('index', {"title":"Welcome to Mealbot!"});
+});
+
+app.get('/map', function(req, res) {
+  console.error('render map');
+  res.render('map', {"title":"MapQuest sample"});
+});
+
 module.exports = app;
