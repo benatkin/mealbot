@@ -37,7 +37,7 @@ function log(message, callback) {
 
 function recipients(message) {
   var emails = message.envelope.from;
-  if (Array.isArray(message.envelope.to) {
+  if (Array.isArray(message.envelope.to)) {
     for (var i=0; i < message.envelope.to.length; i++) {
       var email = message.envelope.to[i];
       if (email.toLowerCase().indexOf('mealbot.json.bz') == -1) {
