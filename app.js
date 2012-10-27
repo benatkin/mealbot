@@ -54,7 +54,9 @@ function getRecipients(message) {
   var emails = [], names = [];
   if (message.to) addRecipients(message.to);
   if (message.cc) addRecipients(message.cc);
-  return {emails: emails, names: names};
+  var result = {emails: emails, names: names};
+  console.error('recipients', result);
+  return result;
 }
 
 function reply(message, callback) {
