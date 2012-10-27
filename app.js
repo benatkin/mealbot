@@ -1,5 +1,7 @@
 var express = require('express')
   , path = require('path')
+  , request = require('superagent')
+  , assert = require('assert'),
   , async = require('async');
 
 var app = express();
@@ -13,16 +15,63 @@ app.configure(function(){
   app.use(express.methodOverride());
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));
+  app.use(express.errorHandler({dumpExceptions: true}));
 });
 
-app.configure('development', function(){
-  app.use(express.errorHandler());
-});
+function getenv(name) {
+  var val = process.env[name.toUpperCase()];
+  assert.ok(val);
+  return val;
+}
+
+function log(message, callback) {
+  request
+    .post(getenv('couch_url'))
+    .type('json')
+    .send(message)
+    .set('Accept', 'application/json')
+    .end(function(rres) {
+      assert.equal(rres.statusCode, 201);
+      callback(null);
+    });
+}
+
+function recipients(message) {
+  var emails = message.envelope.from;
+  if (Array.isArray(message.envelope.to)) {
+    for (var i=0; i < message.envelope.to.length; i++) {
+      var email = message.envelope.to[i];
+      if (email.toLowerCase().indexOf('mealbot.json.bz') == -1) {
+        emails.push(email);
+      }
+    }
+  }
+  return emails;
+}
+
+function reply(message, callback) {
+  request
+    .post('https://sendgrid.com/api/mail.send.json')
+    .type('form')
+    .send({
+      api_user: getenv('sendgrid_api_user'),
+      api_key: getenv('sendgrid_api_key'),
+      to: recipients(message),
+      subject: 'Re: ' + message.subject,
+      html: '<h1 style="color: red">Coming Soon! For now just go to Chipotle.</h1>',
+      from: 'noms@mealbot.json.bz'
+    })
+    .end(function(res) {
+      assert.equal(res.status, 200);
+      callback(null);
+    });
+}
 
 app.post('/email', function(req, res) {
-  console.error('email request');
-  console.error(req.body);
-  res.send(200);
+  log(req.body, function() {});
+  reply(req.body, function(err) {
+    res.send(200);
+  });
 });
 
 app.get('/', function(req, res) {
