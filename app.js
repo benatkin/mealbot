@@ -35,27 +35,11 @@ function log(message, callback) {
     });
 }
 
-function findEmails(emails, field) {
-  if (Array.isArray(field)) {
-    for (var i=0; i < field.length; i++) {
-      var email = field[i];
-      if (email.toLowerCase().indexOf('mealbot.json.bz') == -1) {
-        emails.push(email);
-      }
-    }
-  }
-}
-
 function recipients(message) {
-  var envelope = typeof message.envelope == 'string'
-                 ? JSON.parse(message.envelope)
-                 : message.envelope
-    , emails = Array.isArray(envelope.from)
-               ? envelope.from.slice()
-               : [envelope.from];
-  findEmails(emails, envelope.to);
-  findEmails(emails, envelope.cc);
-  console.error('envelope', envelope);
+  var fields = [];
+  if (message.to) fields.push(message.to);
+  if (message.cc) fields.push(message.cc);
+  var people = fields.join(",").trim().split(/\s*,\s*/);
   console.error('emails', emails);
   return emails;
 }
