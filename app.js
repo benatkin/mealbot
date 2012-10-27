@@ -1,7 +1,6 @@
 var express = require('express')
   , path = require('path')
   , request = require('superagent')
-  , assert = require('assert')
   , yelp = require('yelp')
   , sax = require('sax')
   , mimelib = require('mimelib-noiconv');
@@ -22,7 +21,9 @@ app.configure(function(){
 
 function getenv(name) {
   var val = process.env[name.toUpperCase()];
-  assert.ok(val);
+  if (!val) {
+    console.error('missing environment variable ' + JSON.stringify(name) + ': ', val);
+  }
   return val;
 }
 
@@ -30,10 +31,15 @@ function log(message, callback) {
   request
     .post(getenv('couch_url'))
     .type('json')
-    .send(message)
+    .send({
+      message: message,
+      date: new Date()
+    })
     .set('Accept', 'application/json')
     .end(function(rres) {
-      assert.equal(rres.statusCode, 201);
+      if (rres.statusCode != 201) {
+        console.error('logging to CouchDB failed');
+      }
       callback(null);
     });
 }
@@ -43,18 +49,22 @@ function getRecipients(message) {
   function addRecipients(field) {
     var addresses = mimelib.parseAddresses(field);
     addresses.forEach(function(address) {
+      if (/mealbot\.json\.bz/i.test(address.address)) return;
       emails.push(address.address);
       names.push(address.name || address.address);
     });
   }
 
   var emails = [], names = [];
+  if (message.from) addRecipients(message.from);
   if (message.to) addRecipients(message.to);
   if (message.cc) addRecipients(message.cc);
-  return {emails: emails, names: names};
+  var result = {emails: emails, names: names};
+  console.error('recipients', result);
+  return result;
 }
 
-function reply(message, callback) {
+function reply(message, html, callback) {
   var recipients = getRecipients(message);
   request
     .post('https://sendgrid.com/api/mail.send.json')
@@ -62,22 +72,28 @@ function reply(message, callback) {
     .send({
       api_user: getenv('sendgrid_api_user'),
       api_key: getenv('sendgrid_api_key'),
-      to: recipients.to,
-      toname: recipients.toname,
+      to: recipients.emails,
+      toname: recipients.names,
       subject: 'Re: ' + message.subject,
-      html: '<h1 style="color: red">Coming Soon! For now just go to Chipotle.</h1>',
+      html: html,
       from: 'noms@mealbot.json.bz'
     })
     .end(function(res) {
-      assert.equal(res.status, 200);
+      if (res.status != 200) {
+        console.error('sendgrid error code ' + res.status + ': ', res.body);
+        callback(new Error('error sending email'));
+      }
       callback(null);
     });
 }
 
-app.post('/email', function(req, res) {
+app.post('/email', function(req, res, next) {
   log(req.body, function() {});
-  reply(req.body, function(err) {
-    res.send(200);
+  res.render('email', {}, function(err, html) {
+    reply(req.body, html, function(err) {
+      if (err) return next(err);
+      res.send(200);
+    });
   });
 });
 
@@ -91,7 +107,6 @@ app.get('/map', function(req, res) {
   var places = getPlaces("Denver, Colorado", "chinese", function(err, locations) {
     var location = locations[0];
     res.render('map', {"title":"Mealbot Suggestions", places: locations.businesses});
-    
   }); // getPlaces
   //console.error(places.city.toString());
 });
@@ -111,6 +126,10 @@ function getPlaces(location, food, callback) {
     }
 
     getYelpPlaces(geolocations[0].city, geolocations[0].state.name, food, function(err, places) {
+      if (err) {
+        callback(err);
+        return;
+      }
       console.error('yelp data is in places: ',places);
       callback(null, places);
     });  
@@ -122,7 +141,7 @@ function getPlaces(location, food, callback) {
 
 function locationEnrichment(location, callback) {
   // enrich location data using full contact api
-  var fcKey = "scrubbed";
+  var fcKey = getenv("full_contact_key");
   var address = '', city = '', state = '';
   var locations = [];
   request
@@ -131,7 +150,10 @@ function locationEnrichment(location, callback) {
     .query({'apiKey': fcKey})
     .set('Accept', 'application/json')
     .end(function(rres) {
-      assert.equal(rres.statusCode, 200);
+      if (rres.statusCode != 200) {
+        callback(new Error('Error getting locations from Yelp'));
+        return;
+      }
       console.error("Found ",rres.body.locations.length," locations");
       //console.error('done');
       locations = rres.body.locations;
@@ -156,10 +178,6 @@ function getYelpPlaces(city, state, typeOfFood, callback) {
 
     callback(null, data);
   });
-}
-
-function getMapQuestPlaces() {
-  
 }
 
 module.exports = app;
