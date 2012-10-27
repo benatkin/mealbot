@@ -3,7 +3,8 @@ var express = require('express')
   , request = require('superagent')
   , assert = require('assert')
   , yelp = require('yelp')
-  , sax = require('sax');
+  , sax = require('sax')
+  , mimelib = require('mimelib-noiconv');
 
 var strict = true, 
     parser = sax.parser(strict);
@@ -40,23 +41,32 @@ function log(message, callback) {
     });
 }
 
-function recipients(message) {
-  var fields = [];
-  if (message.to) fields.push(message.to);
-  if (message.cc) fields.push(message.cc);
-  var emails = fields.join(",").trim().split(/\s*,\s*/);
-  console.error('emails', emails);
-  return emails;
+
+function getRecipients(message) {
+  function addRecipients(field) {
+    var addresses = mimelib.parseAddresses(field);
+    Array.forEach(addresses, function(address) {
+      emails.push(address.address);
+      names.push(address.name || address.address);
+    });
+  }
+
+  var emails = [], names = [];
+  if (message.to) addRecipients(message.to);
+  if (message.cc) addRecipients(message.cc);
+  return {emails: emails, names: names};
 }
 
 function reply(message, callback) {
+  var recipients = getRecipients(message);
   request
     .post('https://sendgrid.com/api/mail.send.json')
     .type('form')
     .send({
       api_user: getenv('sendgrid_api_user'),
       api_key: getenv('sendgrid_api_key'),
-      to: recipients(message),
+      to: recipients.to,
+      toname: recipients.toname,
       subject: 'Re: ' + message.subject,
       html: '<h1 style="color: red">Coming Soon! For now just go to Chipotle.</h1>',
       from: 'noms@mealbot.json.bz'
@@ -133,10 +143,10 @@ function locationEnrichment(location, callback) {
 
 function getYelpPlaces(city, state, typeOfFood, callback) {
   var yelpapi  = yelp.createClient({
-    consumer_key: "akqqN2r0exZiFtHjavVxpA", 
-    consumer_secret: "scrubbed",
-    token: "AC9JsQ3rcVxeVyX8LJjwaVVYJrsoSjuE",
-    token_secret: "scrubbed"
+    consumer_key: getenv('yelp_consumer_key'),
+    consumer_secret: getenv('yelp_consumer_secret'),
+    token: getenv('yelp_token'),
+    token_secret: getenv('yelp_token_secret')
   });
 
   // See http://www.yelp.com/developers/documentation/v2/search_api

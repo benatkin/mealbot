@@ -1,5 +1,5 @@
 {
-  "name": "application-name",
+  "name": "mealbot",
   "version": "0.0.1",
   "private": true,
   "main": "./app",
@@ -12,6 +12,7 @@
     "jade": "*",
     "superagent": "~0.9.7",
     "yelp" : "0.1.1",
-    "sax" : "0.4.2"
+    "sax" : "0.4.2",
+    "mimelib-noiconv": "*"
   }
 }
