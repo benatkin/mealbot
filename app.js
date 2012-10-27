@@ -60,7 +60,6 @@ function getRecipients(message) {
   if (message.to) addRecipients(message.to);
   if (message.cc) addRecipients(message.cc);
   var result = {emails: emails, names: names};
-  console.error('recipients', result);
   return result;
 }
 
@@ -134,39 +133,27 @@ app.post('/email', function(req, res, next) {
 });
 
 app.get('/', function(req, res) {
-  console.error('index loaded');
   res.render('index', {"title":"Welcome to Mealbot!"});
 });
 
 app.get('/map', function(req, res) {
-  console.error('render map');
   var places = getPlaces("Denver, Colorado", "chinese", function(err, locations) {
     var location = locations[0];
     res.render('map', {"title":"Mealbot Suggestions", places: locations.businesses});
   }); // getPlaces
-  //console.error(places.city.toString());
 });
 
 // function that gets an address, returns list of places based on apis
 function getPlaces(location, food, callback) {
 
-  var debug = false;
-  console.error("get places");
   var locations = locationEnrichment(location, function(err, geolocations) {
     console.log('list locations');
-    if (debug) {
-      var len = geolocations.length;
-      for(var i = 0; i<len; i++) {
-        console.error("location ",i," is ",geolocations[i].address," in ",geolocations[i].state.code)
-      }
-    }
 
     getYelpPlaces(geolocations[0].city, geolocations[0].state.name, food, function(err, places) {
       if (err) {
         callback(err);
         return;
       }
-      console.error('yelp data is in places: ',places);
       callback(null, places);
     });  
 
@@ -190,8 +177,6 @@ function locationEnrichment(location, callback) {
         callback(new Error('Error getting locations from Yelp'));
         return;
       }
-      console.error("Found ",rres.body.locations.length," locations");
-      //console.error('done');
       locations = rres.body.locations;
       callback(null, locations);
     });
