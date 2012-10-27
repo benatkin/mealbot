@@ -1,7 +1,7 @@
 var express = require('express')
   , path = require('path')
   , request = require('superagent')
-  , assert = require('assert'),
+  , assert = require('assert')
   , async = require('async');
 
 var app = express();
@@ -83,21 +83,26 @@ app.get('/map', function(req, res) {
   console.error('render map');
   res.render('map', {"title":"MapQuest sample"});
   var places = getPlaces("Denver, Colorado", "chinese", function(err, locations) {
-    console.error(places);
+    var location = locations[0];
+    getYelpPlaces(location.city, location.state.name, function(err, places) {
 
-  });
+    });  
+  }); // getPlaces
   //console.error(places.city.toString());
 });
 
 // function that gets an address, returns list of places based on apis
-function getPlaces(location, food) {
+function getPlaces(location, food, callback) {
 
+  var debug = false;
   console.error("get places");
   var locations = locationEnrichment(location, function(err, geolocations) {
     console.log('list locations');
-    var len = geolocations.length;
-    for(var i = 0; i<len; i++) {
-      console.error("location ",i," is ",geolocations[i].address," in ",geolocations[i].state.code)
+    if (debug) {
+      var len = geolocations.length;
+      for(var i = 0; i<len; i++) {
+        console.error("location ",i," is ",geolocations[i].address," in ",geolocations[i].state.code)
+      }
     }
 
     callback(null, geolocations);
@@ -105,7 +110,7 @@ function getPlaces(location, food) {
   });
 }
 
-function locationEnrichment(location) {
+function locationEnrichment(location, callback) {
   // enrich location data using full contact api
   var fcKey = "scrubbed";
   var address = '', city = '', state = '';
@@ -120,10 +125,10 @@ function locationEnrichment(location) {
       console.error("Found ",rres.body.locations.length," locations");
       //console.error('done');
       locations = rres.body.locations;
+      callback(null, locations);
     });
 
   console.error('request is async');
-  callback(null, locations);
 
 }
 
