@@ -45,7 +45,7 @@ function log(message, callback) {
 function getRecipients(message) {
   function addRecipients(field) {
     var addresses = mimelib.parseAddresses(field);
-    Array.forEach(addresses, function(address) {
+    addresses.forEach(function(address) {
       emails.push(address.address);
       names.push(address.name || address.address);
     });
