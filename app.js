@@ -2,7 +2,6 @@ var express = require('express')
   , path = require('path')
   , request = require('superagent')
   , assert = require('assert')
-  , async = require('async')
   , yelp = require('yelp')
   , sax = require('sax');
 
@@ -130,9 +129,6 @@ function locationEnrichment(location, callback) {
       locations = rres.body.locations;
       callback(null, locations);
     });
-
-  console.error('request is async');
-
 }
 
 function getYelpPlaces(city, state, typeOfFood, callback) {
@@ -144,9 +140,11 @@ function getYelpPlaces(city, state, typeOfFood, callback) {
   });
 
   // See http://www.yelp.com/developers/documentation/v2/search_api
-  yelpapi.search({term: typeOfFood + " food", location: city + ", " + state}, function(error, data) {
-    console.log('yelp errors: ',
-      error);
+  yelpapi.search({term: typeOfFood + " food", location: city + ", " + state}, function(err, data) {
+    if (err) {
+      console.log('got an error from yelp', err);
+      return callback(err);
+    }
     //console.log(data);
     callback(null, data);
   });
