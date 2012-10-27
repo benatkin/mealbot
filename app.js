@@ -29,14 +29,13 @@ function log(message, callback) {
     .set('Accept', 'application/json')
     .end(function(rres) {
       assert.equal(rres.statusCode, 201);
-      callback(null);
+      if (callback) callback(null);
     });
 }
 
 app.post('/email', function(req, res) {
-  log(req.body, function(err) {
-    res.send(200);
-  });
+  log(req.body);
+  res.send(200);
 });
 
 module.exports = app;
