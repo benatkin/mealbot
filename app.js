@@ -2,7 +2,8 @@ var express = require('express')
   , path = require('path')
   , request = require('superagent')
   , assert = require('assert')
-  , async = require('async');
+  , async = require('async')
+  , yelp = require('yelp');
 
 var app = express();
 
@@ -94,9 +95,7 @@ app.get('/map', function(req, res) {
   res.render('map', {"title":"MapQuest sample"});
   var places = getPlaces("Denver, Colorado", "chinese", function(err, locations) {
     var location = locations[0];
-    getYelpPlaces(location.city, location.state.name, function(err, places) {
-
-    });  
+    
   }); // getPlaces
   //console.error(places.city.toString());
 });
@@ -114,6 +113,10 @@ function getPlaces(location, food, callback) {
         console.error("location ",i," is ",geolocations[i].address," in ",geolocations[i].state.code)
       }
     }
+
+    getYelpPlaces(geolocations[0].city, geolocations[0].state.name, food, function(err, places) {
+      
+    });  
 
     callback(null, geolocations);
   
@@ -142,7 +145,20 @@ function locationEnrichment(location, callback) {
 
 }
 
-function getYelpPlaces() {
+function getYelpPlaces(city, state, typeOfFood, callback) {
+  var yelpapi  = yelp.createClient({
+    consumer_key: "akqqN2r0exZiFtHjavVxpA", 
+    consumer_secret: "scrubbed",
+    token: "AC9JsQ3rcVxeVyX8LJjwaVVYJrsoSjuE",
+    token_secret: "scrubbed"
+  });
+
+  // See http://www.yelp.com/developers/documentation/v2/search_api
+  yelpapi.search({term: typeOfFood + " food", location: city + ", " + state}, function(error, data) {
+    console.log(error);
+    console.log(data);
+  });
+  
 
 }
 

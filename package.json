@@ -11,6 +11,7 @@
     "express": "3.0.0",
     "jade": "*",
     "async": "0.1.22",
-    "superagent": "~0.9.7"
+    "superagent": "~0.9.7",
+    "yelp" : "0.1.1"
   }
 }
