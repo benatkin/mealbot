@@ -55,6 +55,7 @@ function recipients(message) {
                : [envelope.from];
   findEmails(emails, envelope.to);
   findEmails(emails, envelope.cc);
+  console.error('envelope', envelope);
   console.error('emails', emails);
   return emails;
 }
