@@ -37,10 +37,12 @@ function log(message, callback) {
 
 function recipients(message) {
   var emails = message.envelope.from;
-  for (var i=0; i < message.envelope.to.length; i++) {
-    var email = message.envelope.to[i];
-    if (email.toLowerCase().indexOf('mealbot.json.bz') == -1) {
-      emails.push(email);
+  if (Array.isArray(message.envelope.to) {
+    for (var i=0; i < message.envelope.to.length; i++) {
+      var email = message.envelope.to[i];
+      if (email.toLowerCase().indexOf('mealbot.json.bz') == -1) {
+        emails.push(email);
+      }
     }
   }
   return emails;
