@@ -118,7 +118,7 @@ function reply(message, recipients, html, callback) {
 app.post('/email', function(req, res, next) {
   log(req.body, function() {});
 
-  var message = res.body
+  var message = req.body
     , recipients = getRecipients(message)
     , params = getParams(message.text);
 
