@@ -124,6 +124,10 @@ function getPlaces(location, food, callback) {
     }
 
     getYelpPlaces(geolocations[0].city, geolocations[0].state.name, food, function(err, places) {
+      if (err) {
+        callback(err);
+        return;
+      }
       console.error('yelp data is in places: ',places);
       callback(null, places);
     });  
@@ -135,7 +139,7 @@ function getPlaces(location, food, callback) {
 
 function locationEnrichment(location, callback) {
   // enrich location data using full contact api
-  var fcKey = "scrubbed";
+  var fcKey = getenv("full_contact_key");
   var address = '', city = '', state = '';
   var locations = [];
   request
@@ -144,7 +148,10 @@ function locationEnrichment(location, callback) {
     .query({'apiKey': fcKey})
     .set('Accept', 'application/json')
     .end(function(rres) {
-      assert.equal(rres.statusCode, 200);
+      if (rres.statusCode != 200) {
+        callback(new Error('Error getting locations from Yelp'));
+        return;
+      }
       console.error("Found ",rres.body.locations.length," locations");
       //console.error('done');
       locations = rres.body.locations;
@@ -169,10 +176,6 @@ function getYelpPlaces(city, state, typeOfFood, callback) {
 
     callback(null, data);
   });
-}
-
-function getMapQuestPlaces() {
-  
 }
 
 module.exports = app;
