@@ -20,22 +20,58 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
+function getenv(name) {
+  var val = process.env[name.toUpperCase()];
+  assert.ok(val);
+  return val;
+}
+
 function log(message, callback) {
-  var couchUrl = process.env.COUCH_URL;
-  assert.ok(couchUrl);
   request
-    .post(couchUrl)
+    .post(getenv('couch_url'))
+    .type('json')
     .send(message)
     .set('Accept', 'application/json')
     .end(function(rres) {
       assert.equal(rres.statusCode, 201);
-      if (callback) callback(null);
+      callback(null);
+    });
+}
+
+function recipients(message) {
+  var emails = message.envelope.from;
+  for (var i=0; i < message.envelope.to.length; i++) {
+    var email = message.envelope.to[i];
+    if (email.toLowerCase().indexOf('mealbot.json.bz') == -1) {
+      emails.push(email);
+    }
+  }
+  return emails;
+}
+
+function reply(message, callback) {
+  request
+    .post('https://sendgrid.com/api/mail.send.json')
+    .type('form')
+    .send({
+      api_user: getenv('sendgrid_api_user'),
+      api_key: getenv('sendgrid_api_key'),
+      to: recipients(message),
+      subject: 'Re: ' + message.subject,
+      html: '<h1 style="color: red">Coming Soon! For now just go to Chipotle.</h1>',
+      from: 'noms@mealbot.json.bz'
+    })
+    .end(function(res) {
+      assert.equal(res.status, 200);
+      callback(null);
     });
 }
 
 app.post('/email', function(req, res) {
-  log(req.body);
-  res.send(200);
+  log(req.body, function() {});
+  reply(req.body, function(err) {
+    res.send(200);
+  });
 });
 
 app.get('/', function(req, res) {
