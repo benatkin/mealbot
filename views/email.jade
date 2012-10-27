@@ -2,4 +2,11 @@ html
   head
     title email
   body
-    p This message is being rendered from the template.
+    if noms
+      h1 Found #{noms.length} restaurants!
+      each nom in noms
+        p
+          a(href=nom.url)= nom.name
+          img(src=nom.rating_img_url_small)
+    else
+      h1 No restaurants found. May we suggest Chipotle?
