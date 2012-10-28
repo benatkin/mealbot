@@ -67,8 +67,8 @@ function getParams(text) {
   var match = /(.*) in (.*)/gm.exec(text);
   if (match) {
     return {
-      location: match[1],
-      food: match[2],
+      location: match[2],
+      food: match[1],
       defaultQuery: false
     };
   } else {
