@@ -124,7 +124,8 @@ app.post('/email', function(req, res, next) {
   getNoms(params, function(err, noms) {
     if (err) return next(err);
     res.render('email', {noms: noms, default: params.default}, function(err, html) {
-      reply(req.body, recipients, html, function(err) {
+      console.error(html);
+      reply(message, recipients, html, function(err) {
         if (err) return next(err);
         res.send(200);
       });
@@ -147,8 +148,6 @@ app.get('/map', function(req, res) {
 function getPlaces(location, food, callback) {
 
   var locations = locationEnrichment(location, function(err, geolocations) {
-    console.log('list locations');
-
     getYelpPlaces(geolocations[0].city, geolocations[0].state.name, food, function(err, places) {
       if (err) {
         callback(err);
@@ -156,9 +155,6 @@ function getPlaces(location, food, callback) {
       }
       callback(null, places);
     });  
-
-    //callback(null, geolocations);
-  
   });
 }
 
