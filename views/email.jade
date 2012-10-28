@@ -2,14 +2,15 @@ html
   head
     title email
   body
-    if noms
-      h1 Found #{noms.length} restaurants!
-      each nom in noms
+    if places
+      h1 Found #{places.length} restaurants!
+      each place in places
         p
-          a(href=nom.url)= nom.name
-          img(src=nom.rating_img_url_small)
+          a(href=place.url)= place.name
+          img(src=place.rating_img_url_small)
     else
       h1 No restaurants found. May we suggest Chipotle?
     if defaultQuery
       p We didn't see a cuisine and location request, so we used the default, pizza in Denver.
       p Be sure to include it on its own line and format it as "{cuisine} in {city}"!
+    p Powered by <a href="http://yelp.com/">Yelp!</a>

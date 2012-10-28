@@ -80,10 +80,10 @@ function getParams(text) {
   }
 }
 
-function getNoms(params, callback) {
+function searchPlaces(params, callback) {
   getPlaces(params.location, params.food, function(err, locations) {
     if (err) {
-      console.log('could not get locations');
+      console.log('could not search places');
       callback(err);
     }
     if (Array.isArray(locations.businesses) && locations.businesses.length > 0) {
@@ -124,10 +124,10 @@ app.post('/email', function(req, res, next) {
     , params = getParams(message.text);
 
   console.log('params', params);
-  getNoms(params, function(err, noms) {
+  searchPlaces(params, function(err, places) {
     if (err) return next(err);
     res.status(200);
-    res.render('email', {noms: noms, defaultQuery: params.defaultQuery}, function(err, html) {
+    res.render('email', {places: places, defaultQuery: params.defaultQuery}, function(err, html) {
       if (err) {
         console.error('render error', err);
         next(err);
