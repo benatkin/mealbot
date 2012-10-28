@@ -69,13 +69,13 @@ function getParams(text) {
     return {
       location: 'Denver',
       food: 'Pizza',
-      default: false
+      defaultQuery: false
     };
   } else {
     return {
       location: 'Denver',
       food: 'Pizza',
-      default: true
+      defaultQuery: true
     };
   }
 }
@@ -126,7 +126,7 @@ app.post('/email', function(req, res, next) {
   console.log('params', params);
   getNoms(params, function(err, noms) {
     if (err) return next(err);
-    res.render('email', {noms: noms, default: params.default}, function(err, html) {
+    res.render('email', {noms: noms, defaultQuery: params.defaultQuery}, function(err, html) {
       if (err) {
         console.error('render error', err);
         next(err);
