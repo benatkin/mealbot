@@ -126,7 +126,10 @@ app.post('/email', function(req, res, next) {
   getNoms(params, function(err, noms) {
     if (err) return next(err);
     res.render('email', {noms: noms, default: params.default}, function(err, html) {
-      console.error(html);
+      if (err) {
+        console.log('render error', err);
+        next(err);
+      }
       reply(message, recipients, html, function(err) {
         if (err) return next(err);
         res.send(200);
