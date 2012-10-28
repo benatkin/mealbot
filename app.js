@@ -68,7 +68,8 @@ function getParams(text) {
   if (match) {
     return {
       location: 'Denver',
-      food: 'Pizza'
+      food: 'Pizza',
+      default: false
     };
   } else {
     return {
@@ -127,7 +128,7 @@ app.post('/email', function(req, res, next) {
     if (err) return next(err);
     res.render('email', {noms: noms, default: params.default}, function(err, html) {
       if (err) {
-        console.log('render error', err);
+        console.error('render error', err);
         next(err);
       }
       reply(message, recipients, html, function(err) {
