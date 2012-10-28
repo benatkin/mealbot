@@ -67,8 +67,8 @@ function getParams(text) {
   var match = /^(.*) in (.*)$/.exec(text);
   if (match) {
     return {
-      location: 'Denver',
-      food: 'Pizza',
+      location: match[1],
+      food: match[2],
       defaultQuery: false
     };
   } else {
@@ -126,6 +126,7 @@ app.post('/email', function(req, res, next) {
   console.log('params', params);
   getNoms(params, function(err, noms) {
     if (err) return next(err);
+    res.status(200);
     res.render('email', {noms: noms, defaultQuery: params.defaultQuery}, function(err, html) {
       if (err) {
         console.error('render error', err);
@@ -133,7 +134,7 @@ app.post('/email', function(req, res, next) {
       }
       reply(message, recipients, html, function(err) {
         if (err) return next(err);
-        res.send(200);
+        res.end();
       });
     });
   });
