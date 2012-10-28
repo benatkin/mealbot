@@ -82,12 +82,13 @@ function getParams(text) {
 function getNoms(params, callback) {
   getPlaces(params.location, params.food, function(err, locations) {
     if (err) {
+      console.log('could not get locations');
       callback(err);
-      if (Array.isArray(locations.businesses) && locations.businesses.length > 0) {
-        callback(null, locations.businesses);
-      } else {
-        callback(null, null);
-      }
+    }
+    if (Array.isArray(locations.businesses) && locations.businesses.length > 0) {
+      callback(null, locations.businesses);
+    } else {
+      callback(null, null);
     }
   });
 }
